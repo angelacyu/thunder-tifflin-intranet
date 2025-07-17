@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Tifflin Paper Company - Employee Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Verdana, Geneva, sans-serif;
+            background: linear-gradient(135deg, #f5f5dc 0%, #f0f0e8 100%);
+            color: #2c3e50;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Add subtle texture background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(255, 255, 255, 0.05) 1px,
+                    rgba(255, 255, 255, 0.05) 2px);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            margin-right: 0.5rem;
+            color: #FFD700;
+            font-size: 1.8rem;
+        }
+
+        /* Logo animation for the icon */
+        .logo-icon {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 100px;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-bar {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 25px;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        #current-time {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Main Content Layout */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .single-column {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Employee Directory */
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .employee-directory-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .employee-directory-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .employee-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .employee-details h4 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .employee-details p {
+            margin: 0.25rem 0;
+            color: #5a6c7d;
+            font-size: 0.9rem;
+        }
+
+        /* HR Links */
+        .hr-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Sales Metrics */
+        .sales-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .metric-card h3 {
+            color: #5a6c7d;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .metric-change.positive {
+            color: #28a745;
+        }
+
+        .metric-change.negative {
+            color: #dc3545;
+        }
+
+        .metric-change.neutral {
+            color: #6c757d;
+        }
+
+        /* Inventory */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .inventory-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+
+        .inventory-item h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .inventory-level {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4a90e2;
+            margin-bottom: 1rem;
+        }
+
+        /* Financial Summary */
+        .financial-summary {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .finance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .finance-item:last-child {
+            border-bottom: none;
+        }
+
+        .expense-number {
+            font-weight: bold;
+            color: #dc3545;
+        }
+
+        .profit-number {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        /* Forms */
+        .expense-form form,
+        .visitor-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .expense-form input,
+        .expense-form select,
+        .visitor-form input {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .expense-form input:focus,
+        .expense-form select:focus,
+        .visitor-form input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+        }
+
+        /* Office Info */
+        .office-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .office-info h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .office-info p {
+            margin: 0.5rem 0;
+            color: #5a6c7d;
+        }
+
+        /* Widget Styles */
+        .widget {
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4a90e2, #d4af37, #4a90e2);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .widget:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.15),
+                0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .widget h2 {
+            color: #2c3e50;
+            font-family: 'Arial Black', Arial, sans-serif;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            border-bottom: 2px solid transparent;
+            background: linear-gradient(90deg, #4a90e2, #d4af37);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .widget h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #4a90e2, #d4af37);
+            border-radius: 2px;
+        }
+
+        .widget h3 {
+            color: #5a6c7d;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Announcements */
+        .announcement {
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3c4 100%);
+            border: 1px solid #ffd54f;
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .announcement::before {
+            content: '📢';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            font-size: 1.5rem;
+            background: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .announcement:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3);
+        }
+
+        .announcement-date {
+            font-size: 0.85rem;
+            color: #f57c00;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Sales Dashboard */
+        .sales-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .sales-item:hover {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            transform: translateX(5px);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .sales-item:last-child {
+            border-bottom: none;
+        }
+
+        .sales-number {
+            font-weight: bold;
+            color: #4a90e2;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            border: 1px solid #90caf9;
+        }
+
+        /* Employee Spotlight */
+        .employee-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .employee-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .employee-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+            border: 3px solid white;
+        }
+
+        /* Safety Counter */
+        .safety-counter {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #28a745;
+            font-weight: bold;
+            margin: 1.5rem 0;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #28a745;
+            box-shadow: 0 4px 16px rgba(40, 167, 69, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .safety-counter::before {
+            content: '🛡️';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .safety-counter div:first-child {
+            font-size: 1rem;
+            color: #155724;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Interactive Elements */
+        .btn {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(74, 144, 226, 0.4);
+            background: linear-gradient(135deg, #357abd 0%, #2968a3 100%);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+            box-shadow: 0 4px 16px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #545b62 0%, #454d54 100%);
+            box-shadow: 0 8px 24px rgba(108, 117, 125, 0.4);
+        }
+
+        /* Status Indicators */
+        .status {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .status.working {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+
+        .status.broken {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 1px solid #dc3545;
+        }
+
+        .status.maintenance {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+
+        /* Chat Bot */
+        .chatbot {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 16px rgba(33, 150, 243, 0.2);
+            border: 1px solid #90caf9;
+        }
+
+        .chatbot-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #90caf9;
+            border-radius: 25px;
+            margin-bottom: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatbot-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-color: #2196f3;
+        }
+
+        .chatbot-response {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            font-style: italic;
+            color: #5a6c7d;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #2196f3;
+        }
+
+        .chatbot-response::before {
+            content: '💬 ';
+            font-style: normal;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(255, 255, 255, 0.05) 1px,
+                    rgba(255, 255, 255, 0.05) 2px);
+        }
+
+        .footer p {
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer p:first-child {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+
+            .search-bar {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Easter Eggs */
+        .easter-egg {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .easter-egg:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .world-best-boss {
+            font-size: 0.9rem;
+            color: #d4af37;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border-radius: 8px;
+            border: 1px solid #d4af37;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        .world-best-boss:hover {
+            background: linear-gradient(135deg, #ffecb3 0%, #ffe082 100%);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">⚡</span> Thunder Tifflin Paper Company
+            </div>
+            <nav class="nav">
+                <a href="#" onclick="showPage('hr')" aria-label="HR Department">HR</a>
+                <a href="#" onclick="showPage('sales')" aria-label="Sales Portal">Sales</a>
+                <a href="#" onclick="showPage('warehouse')" aria-label="Warehouse">Warehouse</a>
+                <a href="#" onclick="showPage('accounting')" aria-label="Accounting">Accounting</a>
+                <a href="#" onclick="showPage('reception')" aria-label="Reception">Reception</a>
+                <a href="#" onclick="showPage('home')" aria-label="Home">🏠 Home</a>
+            </nav>
+            <div class="user-info">
+                <input type="search" class="search-bar" placeholder="Search employees, docs..." aria-label="Search">
+                <span id="current-time">Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container" id="main-content">
+        <!-- Home Page (Default) -->
+        <div id="home-page" class="page">
+            <!-- Left Column -->
+            <section class="left-column">
+                <div class="widget">
+                    <h2>📢 Daily Announcements</h2>
+                    <div class="announcement">
+                        <div class="announcement-date">Today, 9:15 AM</div>
+                        <p>Pretzel Day has been postponed due to salt shortage. We're working with our supplier to
+                            resolve this ASAP.</p>
+                    </div>
+                    <div class="announcement">
+                        <div class="announcement-date">Yesterday, 4:30 PM</div>
+                        <p>New client: Shrute Farms - 500 reams of premium bond paper. Great work, sales team!</p>
+                    </div>
+                    <div class="announcement">
+                        <div class="announcement-date">Yesterday, 2:15 PM</div>
+                        <p>Reminder: No microwaving fish in the annex. Please use the main kitchen for aromatic foods.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🔗 Quick Links</h2>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <button class="btn" onclick="showEasterEgg('handbook')">Employee Handbook</button>
+                        <button class="btn" onclick="showEasterEgg('it')">IT Support</button>
+                        <button class="btn" onclick="showEasterEgg('suggestion')">Suggestion Box</button>
+                        <button class="btn btn-secondary" onclick="showEasterEgg('parking')">Parking
+                            Assignments</button>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>💬 Ask Tony - HR Bot</h2>
+                    <div class="chatbot">
+                        <input type="text" class="chatbot-input" placeholder="Ask Tony anything..."
+                            onkeypress="handleChatBot(event)" aria-label="HR chatbot input">
+                        <button class="btn" onclick="askTony()">Ask</button>
+                        <div id="chatbot-response" class="chatbot-response" style="display: none;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Center Column -->
+            <section class="center-column">
+                <div class="widget">
+                    <h2>📈 Sales Dashboard</h2>
+                    <h3>Monthly Leaderboard</h3>
+                    <div class="sales-item">
+                        <span>1. Tim Halpert "Big Tuna"</span>
+                        <span class="sales-number">$47,250</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>2. Dwight Jr. 🐻</span>
+                        <span class="sales-number">$46,800</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>3. Stanley Hutchinson</span>
+                        <span class="sales-number">$38,900</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>4. Phyllis Lapin</span>
+                        <span class="sales-number">$32,150</span>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>📦 Warehouse Operations</h2>
+                    <div class="safety-counter">
+                        <div>Days Without Incident</div>
+                        <div id="safety-days">3</div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <div class="sales-item">
+                            <span>Forklift #1</span>
+                            <span class="status working">Working</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Forklift #2</span>
+                            <span class="status working">Working</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Loading Dock A</span>
+                            <span class="status working">Available</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Loading Dock B</span>
+                            <span class="status maintenance">Maintenance</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🏢 Office Status</h2>
+                    <div class="sales-item">
+                        <span>Coffee Machine</span>
+                        <span class="status working">Working ☕</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>Vending Machine</span>
+                        <span class="status broken">B6 Stuck 🥨</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>Conference Room A</span>
+                        <span class="status working">Available</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>Conference Room B</span>
+                        <span class="status maintenance">Booked (Dundie Meeting)</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column -->
+            <section class="right-column">
+                <div class="widget">
+                    <h2>⭐ Employee Spotlight</h2>
+                    <div class="employee-card">
+                        <div class="employee-photo">👨‍💼</div>
+                        <h3>Employee of the Month</h3>
+                        <p><strong>Mitchell Scotts</strong><br>Regional Manager</p>
+                        <p style="font-style: italic; font-size: 0.9rem; margin-top: 0.5rem;">
+                            "I'm not superstitious, but I am a little stitious."
+                        </p>
+                        <div class="world-best-boss easter-egg" onclick="showEasterEgg('boss')">
+                            🏆 World's Best Boss
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🎂 Birthdays This Week</h2>
+                    <div class="sales-item">
+                        <span>🎉 Kevin Malone</span>
+                        <span>Today</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>🎈 Angela Martinez</span>
+                        <span>Thursday</span>
+                    </div>
+                    <div class="sales-item">
+                        <span>🎊 Stanley Hutchinson</span>
+                        <span>Saturday</span>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>📅 Upcoming Events</h2>
+                    <div class="announcement">
+                        <div class="announcement-date">Friday, 7:00 PM</div>
+                        <p><strong>Dundie Awards Ceremony</strong><br>Chili's - Scranton</p>
+                    </div>
+                    <div class="announcement">
+                        <div class="announcement-date">Next Monday, 2:00 PM</div>
+                        <p><strong>Office Olympics</strong><br>Conference Room A</p>
+                    </div>
+                    <div class="announcement">
+                        <div class="announcement-date">Next Tuesday, 10:00 AM</div>
+                        <p><strong>Fire Safety Drill</strong><br>Entire Building</p>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🆕 New Hires</h2>
+                    <div class="employee-card">
+                        <div class="employee-photo">👨‍💻</div>
+                        <p><strong>Ryan Howard</strong><br>Temp</p>
+                        <p style="font-size: 0.8rem; color: #666;">Started: This Week</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- HR Page -->
+        <div id="hr-page" class="page" style="display: none;">
+            <section class="single-column">
+                <div class="widget">
+                    <h2>👥 Employee Directory</h2>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="text" class="search-bar" placeholder="Search employees..."
+                            onkeyup="searchEmployees()" id="employee-search" style="width: 100%; margin-bottom: 1rem;">
+                    </div>
+                    <div class="employee-grid" id="employee-grid">
+                        <!-- Employee cards will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>📋 HR Resources</h2>
+                    <div class="hr-links">
+                        <button class="btn" onclick="showDocument('handbook')">📖 Employee Handbook</button>
+                        <button class="btn" onclick="showDocument('benefits')">🏥 Benefits Information</button>
+                        <button class="btn" onclick="showDocument('policies')">📜 Company Policies</button>
+                        <button class="btn" onclick="showDocument('forms')">📄 HR Forms</button>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🎯 Performance Reviews</h2>
+                    <div class="announcement">
+                        <div class="announcement-date">Q2 2025</div>
+                        <p><strong>Annual Performance Reviews</strong><br>Scheduled for July 25-29. Please complete
+                            self-evaluations by July 23.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sales Page -->
+        <div id="sales-page" class="page" style="display: none;">
+            <section class="single-column">
+                <div class="widget">
+                    <h2>📊 Sales Analytics</h2>
+                    <div class="sales-metrics">
+                        <div class="metric-card">
+                            <h3>Monthly Revenue</h3>
+                            <div class="metric-value">$165,100</div>
+                            <div class="metric-change positive">+12.5%</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Active Clients</h3>
+                            <div class="metric-value">47</div>
+                            <div class="metric-change positive">+3</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Pipeline Value</h3>
+                            <div class="metric-value">$89,200</div>
+                            <div class="metric-change neutral">+2.1%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🎯 Top Clients</h2>
+                    <div class="client-list">
+                        <div class="sales-item">
+                            <span>Shrute Farms</span>
+                            <span class="sales-number">$12,450/month</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Scranton Community College</span>
+                            <span class="sales-number">$8,900/month</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Vance Refrigeration</span>
+                            <span class="sales-number">$7,200/month</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Warehouse Page -->
+        <div id="warehouse-page" class="page" style="display: none;">
+            <section class="single-column">
+                <div class="widget">
+                    <h2>📦 Inventory Management</h2>
+                    <div class="inventory-grid">
+                        <div class="inventory-item">
+                            <h3>Premium Bond Paper</h3>
+                            <div class="inventory-level">2,450 reams</div>
+                            <div class="status working">In Stock</div>
+                        </div>
+                        <div class="inventory-item">
+                            <h3>Copy Paper (Standard)</h3>
+                            <div class="inventory-level">890 reams</div>
+                            <div class="status maintenance">Low Stock</div>
+                        </div>
+                        <div class="inventory-item">
+                            <h3>Cardstock</h3>
+                            <div class="inventory-level">45 reams</div>
+                            <div class="status broken">Critical</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🚚 Shipping Schedule</h2>
+                    <div class="shipping-list">
+                        <div class="announcement">
+                            <div class="announcement-date">Today, 2:00 PM</div>
+                            <p><strong>Delivery to Shrute Farms</strong><br>500 reams premium bond - Truck #3</p>
+                        </div>
+                        <div class="announcement">
+                            <div class="announcement-date">Tomorrow, 9:00 AM</div>
+                            <p><strong>Pickup from Supplier</strong><br>New cardstock shipment - Dock B</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Accounting Page -->
+        <div id="accounting-page" class="page" style="display: none;">
+            <section class="single-column">
+                <div class="widget">
+                    <h2>💰 Financial Overview</h2>
+                    <div class="financial-summary">
+                        <div class="finance-item">
+                            <span>Q2 Revenue</span>
+                            <span class="sales-number">$495,300</span>
+                        </div>
+                        <div class="finance-item">
+                            <span>Operating Expenses</span>
+                            <span class="expense-number">$287,150</span>
+                        </div>
+                        <div class="finance-item">
+                            <span>Net Profit</span>
+                            <span class="profit-number">$208,150</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>📈 Expense Reports</h2>
+                    <div class="expense-form">
+                        <h3>Submit New Expense</h3>
+                        <form onsubmit="submitExpense(event)">
+                            <input type="text" placeholder="Description" required>
+                            <input type="number" placeholder="Amount" step="0.01" required>
+                            <select required>
+                                <option value="">Select Category</option>
+                                <option value="office">Office Supplies</option>
+                                <option value="travel">Travel</option>
+                                <option value="meals">Meals</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <button type="submit" class="btn">Submit Expense</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Reception Page -->
+        <div id="reception-page" class="page" style="display: none;">
+            <section class="single-column">
+                <div class="widget">
+                    <h2>🏢 Office Information</h2>
+                    <div class="office-info">
+                        <h3>Thunder Tifflin Paper Company</h3>
+                        <p>📍 1725 Slough Avenue, Scranton, PA 18505</p>
+                        <p>📞 (570) 555-0123</p>
+                        <p>📧 info@thundertifflin.com</p>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>📞 Phone Directory</h2>
+                    <div class="phone-directory">
+                        <div class="sales-item">
+                            <span>Reception (Pam)</span>
+                            <span>Ext. 100</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Mitchell Scotts</span>
+                            <span>Ext. 101</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Sales Team</span>
+                            <span>Ext. 200</span>
+                        </div>
+                        <div class="sales-item">
+                            <span>Warehouse</span>
+                            <span>Ext. 300</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="widget">
+                    <h2>🎫 Visitor Management</h2>
+                    <div class="visitor-form">
+                        <h3>Register Visitor</h3>
+                        <form onsubmit="registerVisitor(event)">
+                            <input type="text" placeholder="Visitor Name" required>
+                            <input type="text" placeholder="Company" required>
+                            <input type="text" placeholder="Meeting With" required>
+                            <button type="submit" class="btn">Register Visitor</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Thunder Tifflin Paper Company, Inc. | "Unlimited paper in a digital world"</p>
+        <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+            Scranton Branch | Founded 1949 | <span class="easter-egg" onclick="showEasterEgg('teapot')">🫖</span>
+        </p>
+    </footer>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // Update time every minute
+        updateTime();
+        setInterval(updateTime, 60000);
+
+        // Employee data
+        const employees = [
+            { name: "Mitchell Scotts", title: "Regional Manager", dept: "Management", ext: "101", email: "mscotts@thundertifflin.com", avatar: "👨‍💼" },
+            { name: "Dwight Jr.", title: "Assistant Regional Manager", dept: "Sales", ext: "102", email: "djr@thundertifflin.com", avatar: "🐻" },
+            { name: "Tim Halpert", title: "Sales Representative", dept: "Sales", ext: "201", email: "thalpert@thundertifflin.com", avatar: "🎣" },
+            { name: "Pam Beasley", title: "Receptionist", dept: "Reception", ext: "100", email: "pbeasley@thundertifflin.com", avatar: "🎨" },
+            { name: "Stan Hutchinson", title: "Sales Representative", dept: "Sales", ext: "202", email: "shutchinson@thundertifflin.com", avatar: "🧩" },
+            { name: "Kevin Mallone", title: "Accountant", dept: "Accounting", ext: "301", email: "kmallone@thundertifflin.com", avatar: "🍪" },
+            { name: "Angela Martinez", title: "Head of Accounting", dept: "Accounting", ext: "302", email: "amartinez@thundertifflin.com", avatar: "😾" },
+            { name: "Tony Flenderson", title: "HR Representative", dept: "HR", ext: "401", email: "tflenderson@thundertifflin.com", avatar: "😐" },
+            { name: "Chris Bratton", title: "Quality Assurance", dept: "QA", ext: "501", email: "cbratton@thundertifflin.com", avatar: "🎸" },
+            { name: "Phyllis Lapin-Vance", title: "Sales Representative", dept: "Sales", ext: "203", email: "plapin@thundertifflin.com", avatar: "🌸" },
+            { name: "Ryan Howards", title: "Temp", dept: "Various", ext: "999", email: "rhowards@thundertifflin.com", avatar: "👨‍💻" },
+            { name: "Darryl Philbins", title: "Warehouse Supervisor", dept: "Warehouse", ext: "601", email: "dphilbins@thundertifflin.com", avatar: "📦" }
+        ];
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.style.display = 'none');
+
+            // Show selected page
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.style.display = 'block';
+
+                // Initialize page-specific content
+                if (pageId === 'hr') {
+                    loadEmployeeDirectory();
+                }
+            }
+
+            // Update navigation active state
+            const navLinks = document.querySelectorAll('.nav a');
+            navLinks.forEach(link => {
+                link.style.background = 'rgba(255,255,255,0.1)';
+                link.style.borderColor = 'rgba(255,255,255,0.2)';
+            });
+
+            // Highlight active nav
+            const activeLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (activeLink) {
+                activeLink.style.background = 'rgba(255,255,255,0.3)';
+                activeLink.style.borderColor = 'rgba(255,255,255,0.5)';
+            }
+        }
+
+        // Load Employee Directory
+        function loadEmployeeDirectory() {
+            const grid = document.getElementById('employee-grid');
+            if (!grid) return;
+
+            grid.innerHTML = employees.map(emp => `
+                <div class="employee-directory-card">
+                    <div class="employee-info">
+                        <div class="employee-avatar">${emp.avatar}</div>
+                        <div class="employee-details">
+                            <h4>${emp.name}</h4>
+                            <p><strong>${emp.title}</strong></p>
+                            <p>${emp.dept} • Ext. ${emp.ext}</p>
+                            <p style="font-size: 0.8rem; color: #888;">${emp.email}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Search Employees
+        function searchEmployees() {
+            const searchTerm = document.getElementById('employee-search').value.toLowerCase();
+            const filteredEmployees = employees.filter(emp =>
+                emp.name.toLowerCase().includes(searchTerm) ||
+                emp.title.toLowerCase().includes(searchTerm) ||
+                emp.dept.toLowerCase().includes(searchTerm)
+            );
+
+            const grid = document.getElementById('employee-grid');
+            if (!grid) return;
+
+            grid.innerHTML = filteredEmployees.map(emp => `
+                <div class="employee-directory-card">
+                    <div class="employee-info">
+                        <div class="employee-avatar">${emp.avatar}</div>
+                        <div class="employee-details">
+                            <h4>${emp.name}</h4>
+                            <p><strong>${emp.title}</strong></p>
+                            <p>${emp.dept} • Ext. ${emp.ext}</p>
+                            <p style="font-size: 0.8rem; color: #888;">${emp.email}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Show Document
+        function showDocument(docType) {
+            const documents = {
+                'handbook': 'Employee Handbook: Rule #1 - "Sometimes I\'ll start a sentence and I don\'t even know where it\'s going. I just hope I find it along the way." - Management',
+                'benefits': 'Health Benefits: Dental plan available. Lisa needs braces. Dental plan. Lisa needs braces.',
+                'policies': 'Company Policy: No personal items should be left in the warehouse. This includes staplers, especially those encased in jello.',
+                'forms': 'HR Forms: Please see Tony for all forms. He loves paperwork and definitely won\'t sigh heavily.'
+            };
+
+            alert(documents[docType] || 'Document not found.');
+        }
+
+        // Submit Expense
+        function submitExpense(event) {
+            event.preventDefault();
+            alert('Expense submitted successfully! Kevin will review it... eventually.');
+            event.target.reset();
+        }
+
+        // Register Visitor
+        function registerVisitor(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const visitorName = event.target.querySelector('input[placeholder="Visitor Name"]').value;
+            alert(`Visitor "${visitorName}" has been registered. Please have them wait in the lobby.`);
+            event.target.reset();
+        }
+
+        // Tony's HR responses
+        const tonyResponses = [
+            "I'm not really sure about that policy...",
+            "Have you tried asking Mitchell?",
+            "That sounds like a corporate decision.",
+            "I'll have to check with legal on that one.",
+            "Why don't you submit that in writing?",
+            "I think there's a form for that somewhere.",
+            "That's above my pay grade.",
+            "Have you considered anger management classes?"
+        ];
+
+        // Easter egg responses
+        const easterEggs = {
+            'handbook': 'Employee Handbook Rule #1: "Sometimes I\'ll start a sentence and I don\'t even know where it\'s going."',
+            'it': 'IT Support: Password hint is "password". Have you tried turning it off and on again?',
+            'suggestion': 'Suggestion Box: "We should have a casino night!" - Mitchell S.',
+            'parking': 'Parking Lot: Dwight Jr. has claimed spots 1-5 for "security reasons"',
+            'boss': '🏆 Certificate of Achievement: World\'s Best Boss - Self-Nominated',
+            'teapot': '🫖 You found the teapot! It contains... cassette tapes and a hot sauce packet.'
+        };
+
+        function showEasterEgg(type) {
+            if (easterEggs[type]) {
+                alert(easterEggs[type]);
+            }
+        }
+
+        function askTony() {
+            const input = document.querySelector('.chatbot-input');
+            const response = document.getElementById('chatbot-response');
+
+            if (input.value.trim()) {
+                const randomResponse = tonyResponses[Math.floor(Math.random() * tonyResponses.length)];
+                response.textContent = `Tony: ${randomResponse}`;
+                response.style.display = 'block';
+                input.value = '';
+            }
+        }
+
+        function handleChatBot(event) {
+            if (event.key === 'Enter') {
+                askTony();
+            }
+        }
+
+        // Safety counter with occasional reset
+        let safetyDays = 3;
+        function updateSafetyCounter() {
+            // Random chance of "incident" resetting counter
+            if (Math.random() < 0.1) {
+                safetyDays = 0;
+                setTimeout(() => {
+                    alert("🚨 Warehouse Incident Report: Kevin drove the forklift into the wall again.");
+                }, 1000);
+            } else {
+                safetyDays++;
+            }
+            document.getElementById('safety-days').textContent = safetyDays;
+        }
+
+        // Update safety counter every 30 seconds (for demo purposes)
+        setInterval(updateSafetyCounter, 30000);
+
+        // Add some hover effects and interactions
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add click effects to widgets
+            const widgets = document.querySelectorAll('.widget');
+            widgets.forEach(widget => {
+                widget.style.transition = 'all 0.3s ease';
+
+                widget.addEventListener('mouseenter', function () {
+                    this.style.transform = 'translateY(-6px)';
+                    this.style.boxShadow = '0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)';
+                });
+
+                widget.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05)';
+                });
+            });
+
+            // Add sparkle effect to easter eggs
+            const easterEggs = document.querySelectorAll('.easter-egg');
+            easterEggs.forEach(egg => {
+                egg.addEventListener('mouseenter', function () {
+                    this.style.animation = 'sparkle 0.6s ease-in-out';
+                });
+
+                egg.addEventListener('animationend', function () {
+                    this.style.animation = '';
+                });
+            });
+        });
+
+        // Add sparkle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkle {
+                0%, 100% { transform: scale(1) rotate(0deg); }
+                25% { transform: scale(1.1) rotate(-5deg); }
+                75% { transform: scale(1.1) rotate(5deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+
+</html>
