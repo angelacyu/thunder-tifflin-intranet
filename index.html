@@ -672,8 +672,15 @@
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-header {
@@ -898,7 +905,7 @@
                 <span class="logo-icon">⚡</span> Thunder Tifflin Paper Company
             </div>
             <nav class="nav">
-                <a href="#" onclick="showPage('home')" aria-label="Home">🏠 Home</a>
+                <a href="/" aria-label="Home">🏠 Home</a>
                 <a href="#" onclick="showPage('hr')" aria-label="HR Department">HR</a>
                 <a href="#" onclick="showPage('sales')" aria-label="Sales Portal">Sales</a>
                 <a href="#" onclick="showPage('warehouse')" aria-label="Warehouse">Warehouse</a>
@@ -1467,7 +1474,7 @@
 
         function showEasterEgg(type) {
             if (easterEggs[type]) {
-                showModal(easterEggs[type], 'Easter Egg Found! 🥚');
+                showModal(easterEggs[type], 'Thunder Tifflin Document');
             }
         }
 
@@ -1494,34 +1501,34 @@
             const modal = document.getElementById('custom-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalTitle = document.querySelector('.modal-title');
-            
+
             modalMessage.textContent = message;
             modalTitle.textContent = title;
             modal.style.display = 'block';
-            
+
             // Focus the OK button
             document.getElementById('modal-ok-btn').focus();
         }
-        
+
         function closeModal() {
             document.getElementById('custom-modal').style.display = 'none';
         }
-        
+
         // Set up modal event listeners
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('.close-modal').addEventListener('click', closeModal);
             document.getElementById('modal-ok-btn').addEventListener('click', closeModal);
-            
+
             // Close modal when clicking outside of it
-            window.addEventListener('click', function(event) {
+            window.addEventListener('click', function (event) {
                 const modal = document.getElementById('custom-modal');
                 if (event.target === modal) {
                     closeModal();
                 }
             });
-            
+
             // Close modal with Escape key
-            document.addEventListener('keydown', function(event) {
+            document.addEventListener('keydown', function (event) {
                 if (event.key === 'Escape') {
                     closeModal();
                 }
@@ -1530,7 +1537,7 @@
 
         // Safety counter with occasional reset
         let safetyDays = 42; // Initial safety counter
-        
+
         function updateSafetyCounter() {
             // Random chance of "incident" resetting counter
             if (Math.random() < 0.1) {
@@ -1589,7 +1596,7 @@
         `;
         document.head.appendChild(style);
     </script>
-    
+
     <!-- Custom Modal -->
     <div id="custom-modal" class="modal">
         <div class="modal-content">
