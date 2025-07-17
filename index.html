@@ -295,20 +295,18 @@
         .inventory-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
 
-        .inventory-item {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid #dee2e6;
-            text-align: center;
-        }
+.inventory-item h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
 
-        .inventory-item h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
+.inventory-level {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #4a90e2;
+    margin-bottom: 1rem;
+}
         }
 
         .inventory-level {
@@ -715,8 +713,56 @@
         }
 
         .modal-footer {
-            padding: 10px 20px 15px;
+            padding: 10px 15px;
+            border-top: 1px solid #ddd;
             text-align: right;
+        }
+        
+        /* Search Results Styling */
+        .search-category {
+            margin-bottom: 20px;
+        }
+        
+        .search-category h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+        
+        .search-result-item {
+            display: flex;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .search-result-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-result-info {
+            flex: 1;
+        }
+        
+        .search-result-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        .search-result-subtitle {
+            font-size: 0.9rem;
+            color: #666;
         }
 
         .modal-btn {
@@ -913,7 +959,7 @@
                 <a href="#" onclick="showPage('reception')" aria-label="Reception">Reception</a>
             </nav>
             <div class="user-info">
-                <input type="search" class="search-bar" placeholder="Search employees, docs..." aria-label="Search">
+                <input type="search" id="global-search" class="search-bar" placeholder="Search employees, docs..." aria-label="Search">
                 <span id="current-time">Loading...</span>
             </div>
         </div>
@@ -1514,23 +1560,222 @@
             document.getElementById('custom-modal').style.display = 'none';
         }
 
+        // Global Search Function
+        function performGlobalSearch(query) {
+            if (!query || query.trim() === '') return [];
+            
+            query = query.toLowerCase().trim();
+            const results = {
+                employees: [],
+                documents: [],
+                departments: [],
+                other: []
+            };
+            
+            // Search employees
+            employees.forEach(emp => {
+                if (emp.name.toLowerCase().includes(query) ||
+                    emp.title.toLowerCase().includes(query) ||
+                    emp.dept.toLowerCase().includes(query) ||
+                    emp.email.toLowerCase().includes(query)) {
+                    results.employees.push({
+                        title: emp.name,
+                        subtitle: `${emp.title} - ${emp.dept}`,
+                        action: `showPage('hr')`,
+                        icon: emp.avatar
+                    });
+                }
+            });
+            
+            // Search documents
+            const documents = {
+                'handbook': 'Employee Handbook',
+                'benefits': 'Health Benefits',
+                'policies': 'Company Policies',
+                'forms': 'HR Forms'
+            };
+            
+            Object.entries(documents).forEach(([key, title]) => {
+                if (title.toLowerCase().includes(query)) {
+                    results.documents.push({
+                        title: title,
+                        subtitle: 'HR Document',
+                        action: `showDocument('${key}')`,
+                        icon: '📄'
+                    });
+                }
+            });
+            
+            // Search departments
+            const departments = [
+                { id: 'hr', name: 'HR Department', icon: '👥' },
+                { id: 'sales', name: 'Sales Portal', icon: '📊' },
+                { id: 'warehouse', name: 'Warehouse', icon: '📦' },
+                { id: 'accounting', name: 'Accounting', icon: '💰' },
+                { id: 'reception', name: 'Reception', icon: '🏢' }
+            ];
+            
+            departments.forEach(dept => {
+                if (dept.name.toLowerCase().includes(query)) {
+                    results.departments.push({
+                        title: dept.name,
+                        subtitle: 'Department',
+                        action: `showPage('${dept.id}')`,
+                        icon: dept.icon
+                    });
+                }
+            });
+            
+            // Search easter eggs
+            Object.entries(easterEggs).forEach(([key, content]) => {
+                if (content.toLowerCase().includes(query) || key.toLowerCase().includes(query)) {
+                    results.other.push({
+                        title: key.charAt(0).toUpperCase() + key.slice(1),
+                        subtitle: 'Special Content',
+                        action: `showEasterEgg('${key}')`,
+                        icon: '🔍'
+                    });
+                }
+            });
+            
+            return results;
+        }
+        
+        // Display search results
+        function displaySearchResults(results) {
+            const resultsContainer = document.getElementById('search-results');
+            const searchModal = document.getElementById('search-modal');
+            
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+            
+            // Count total results
+            const totalResults = Object.values(results).reduce(
+                (total, category) => total + category.length, 0
+            );
+            
+            if (totalResults === 0) {
+                resultsContainer.innerHTML = '<p>No results found.</p>';
+                searchModal.style.display = 'block';
+                return;
+            }
+            
+            // Build results HTML
+            let resultsHTML = '';
+            
+            // Employees section
+            if (results.employees.length > 0) {
+                resultsHTML += '<div class="search-category"><h3>Employees</h3>';
+                results.employees.forEach(item => {
+                    resultsHTML += `
+                        <div class="search-result-item" onclick="${item.action}; closeSearchModal();">
+                            <div class="search-result-icon">${item.icon}</div>
+                            <div class="search-result-info">
+                                <div class="search-result-title">${item.title}</div>
+                                <div class="search-result-subtitle">${item.subtitle}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                resultsHTML += '</div>';
+            }
+            
+            // Documents section
+            if (results.documents.length > 0) {
+                resultsHTML += '<div class="search-category"><h3>Documents</h3>';
+                results.documents.forEach(item => {
+                    resultsHTML += `
+                        <div class="search-result-item" onclick="${item.action}; closeSearchModal();">
+                            <div class="search-result-icon">${item.icon}</div>
+                            <div class="search-result-info">
+                                <div class="search-result-title">${item.title}</div>
+                                <div class="search-result-subtitle">${item.subtitle}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                resultsHTML += '</div>';
+            }
+            
+            // Departments section
+            if (results.departments.length > 0) {
+                resultsHTML += '<div class="search-category"><h3>Departments</h3>';
+                results.departments.forEach(item => {
+                    resultsHTML += `
+                        <div class="search-result-item" onclick="${item.action}; closeSearchModal();">
+                            <div class="search-result-icon">${item.icon}</div>
+                            <div class="search-result-info">
+                                <div class="search-result-title">${item.title}</div>
+                                <div class="search-result-subtitle">${item.subtitle}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                resultsHTML += '</div>';
+            }
+            
+            // Other results section
+            if (results.other.length > 0) {
+                resultsHTML += '<div class="search-category"><h3>Other</h3>';
+                results.other.forEach(item => {
+                    resultsHTML += `
+                        <div class="search-result-item" onclick="${item.action}; closeSearchModal();">
+                            <div class="search-result-icon">${item.icon}</div>
+                            <div class="search-result-info">
+                                <div class="search-result-title">${item.title}</div>
+                                <div class="search-result-subtitle">${item.subtitle}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                resultsHTML += '</div>';
+            }
+            
+            resultsContainer.innerHTML = resultsHTML;
+            searchModal.style.display = 'block';
+        }
+        
+        function closeSearchModal() {
+            document.getElementById('search-modal').style.display = 'none';
+        }
+        
         // Set up modal event listeners
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('.close-modal').addEventListener('click', closeModal);
             document.getElementById('modal-ok-btn').addEventListener('click', closeModal);
-
-            // Close modal when clicking outside of it
-            window.addEventListener('click', function (event) {
-                const modal = document.getElementById('custom-modal');
-                if (event.target === modal) {
-                    closeModal();
+            
+            document.querySelector('.close-search-modal').addEventListener('click', closeSearchModal);
+            document.getElementById('search-close-btn').addEventListener('click', closeSearchModal);
+            
+            // Set up global search
+            const globalSearch = document.getElementById('global-search');
+            globalSearch.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    const query = globalSearch.value;
+                    const results = performGlobalSearch(query);
+                    displaySearchResults(results);
                 }
             });
 
-            // Close modal with Escape key
+            // Close modals when clicking outside of them
+            window.addEventListener('click', function (event) {
+                const customModal = document.getElementById('custom-modal');
+                const searchModal = document.getElementById('search-modal');
+                
+                if (event.target === customModal) {
+                    closeModal();
+                }
+                
+                if (event.target === searchModal) {
+                    closeSearchModal();
+                }
+            });
+
+            // Close modals with Escape key
             document.addEventListener('keydown', function (event) {
                 if (event.key === 'Escape') {
                     closeModal();
+                    closeSearchModal();
                 }
             });
         });
@@ -1601,14 +1846,30 @@
     <div id="custom-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title">localhost:8080 says</span>
+                <h3 class="modal-title">Modal Title</h3>
                 <span class="close-modal">&times;</span>
             </div>
             <div class="modal-body">
-                <p id="modal-message"></p>
+                <p id="modal-message">Modal content goes here.</p>
             </div>
             <div class="modal-footer">
-                <button id="modal-ok-btn" class="modal-btn">OK</button>
+                <button id="modal-ok-btn" class="btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results Modal -->
+    <div id="search-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Search Results</h3>
+                <span class="close-search-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="search-results"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="search-close-btn" class="btn">Close</button>
             </div>
         </div>
     </div>
