@@ -642,6 +642,91 @@
             box-shadow: 0 8px 24px rgba(108, 117, 125, 0.4);
         }
 
+        .sparkle {
+            animation: sparkle 1.5s infinite alternate;
+            display: inline-block;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 400px;
+            max-width: 90%;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            background-color: #f5f5f5;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-title {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .close-modal {
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #555;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 10px 20px 15px;
+            text-align: right;
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .modal-btn:hover {
+            background-color: #3a7bc8;
+        }
+
         /* Status Indicators */
         .status {
             display: inline-block;
@@ -1339,13 +1424,13 @@
                 'forms': 'HR Forms: Please see Tony for all forms. He loves paperwork and definitely won\'t sigh heavily.'
             };
 
-            alert(documents[docType] || 'Document not found.');
+            showModal(documents[docType] || 'Document not found.', 'Thunder Tifflin Document');
         }
 
         // Submit Expense
         function submitExpense(event) {
             event.preventDefault();
-            alert('Expense submitted successfully! Kevin will review it... eventually.');
+            showModal('Expense submitted successfully! Kevin will review it... eventually.', 'Expense Submission');
             event.target.reset();
         }
 
@@ -1354,7 +1439,7 @@
             event.preventDefault();
             const formData = new FormData(event.target);
             const visitorName = event.target.querySelector('input[placeholder="Visitor Name"]').value;
-            alert(`Visitor "${visitorName}" has been registered. Please have them wait in the lobby.`);
+            showModal(`Visitor "${visitorName}" has been registered. Please have them wait in the lobby.`, 'Visitor Registration');
             event.target.reset();
         }
 
@@ -1382,7 +1467,7 @@
 
         function showEasterEgg(type) {
             if (easterEggs[type]) {
-                alert(easterEggs[type]);
+                showModal(easterEggs[type], 'Easter Egg Found! 🥚');
             }
         }
 
@@ -1404,14 +1489,54 @@
             }
         }
 
+        // Modal functions
+        function showModal(message, title = 'localhost:8080 says') {
+            const modal = document.getElementById('custom-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalTitle = document.querySelector('.modal-title');
+            
+            modalMessage.textContent = message;
+            modalTitle.textContent = title;
+            modal.style.display = 'block';
+            
+            // Focus the OK button
+            document.getElementById('modal-ok-btn').focus();
+        }
+        
+        function closeModal() {
+            document.getElementById('custom-modal').style.display = 'none';
+        }
+        
+        // Set up modal event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            document.getElementById('modal-ok-btn').addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside of it
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('custom-modal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeModal();
+                }
+            });
+        });
+
         // Safety counter with occasional reset
-        let safetyDays = 3;
+        let safetyDays = 42; // Initial safety counter
+        
         function updateSafetyCounter() {
             // Random chance of "incident" resetting counter
             if (Math.random() < 0.1) {
                 safetyDays = 0;
                 setTimeout(() => {
-                    alert("🚨 Warehouse Incident Report: Kevin drove the forklift into the wall again.");
+                    showModal("🚨 Warehouse Incident Report: Kevin drove the forklift into the wall again.");
                 }, 1000);
             } else {
                 safetyDays++;
@@ -1464,6 +1589,22 @@
         `;
         document.head.appendChild(style);
     </script>
+    
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">localhost:8080 says</span>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-ok-btn" class="modal-btn">OK</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
