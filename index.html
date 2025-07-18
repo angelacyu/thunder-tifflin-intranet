@@ -186,6 +186,87 @@
             gap: 2rem;
         }
 
+        /* Search Results Modal */
+        .search-results {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Memorabilia Modal Styles */
+        .memorabilia-modal {
+            background-color: #fffbe6;
+            border: 2px solid #e6d180;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .memorabilia-content h4 {
+            color: #b38600;
+            margin-bottom: 15px;
+        }
+
+        .memorabilia-attribution {
+            margin-top: 15px;
+            font-style: italic;
+            text-align: right;
+        }
+
+        /* Achievement Modal Styles */
+        .achievement-modal {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .achievement-icon {
+            font-size: 3em;
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .achievement-content h4 {
+            color: #4a5568;
+            margin: 0 0 5px 0;
+        }
+
+        .achievement-content h3 {
+            color: #2d3748;
+            margin: 0 0 10px 0;
+        }
+
+        /* Visual Indicators for Easter Eggs */
+        .document-indicator::after {
+            content: '📎';
+            font-size: 0.8em;
+            margin-left: 5px;
+            opacity: 0.7;
+        }
+
+        .memorabilia-indicator {
+            position: relative;
+        }
+
+        .memorabilia-indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(255, 255, 255, 0.1) 70%);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .memorabilia-indicator:hover::before {
+            opacity: 1;
+        }
+
         /* Employee Directory */
         .employee-grid {
             display: grid;
@@ -296,17 +377,17 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
-.inventory-item h3 {
-    color: #2c3e50;
-    margin-bottom: 1rem;
-}
+            .inventory-item h3 {
+                color: #2c3e50;
+                margin-bottom: 1rem;
+            }
 
-.inventory-level {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #4a90e2;
-    margin-bottom: 1rem;
-}
+            .inventory-level {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #4a90e2;
+                margin-bottom: 1rem;
+            }
         }
 
         .inventory-level {
@@ -654,38 +735,51 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.4);
             overflow: auto;
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: #f0f0f0;
             margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Document Modal Styles */
+        .document-modal {
+            background-color: #fff;
+            border: 1px solid #ddd;
             padding: 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            width: 400px;
-            max-width: 90%;
-            animation: modalFadeIn 0.3s;
+            font-family: 'Courier New', monospace;
         }
 
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            padding: 15px 20px;
-            background-color: #f5f5f5;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+        .document-header {
+            background-color: #003366;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -717,12 +811,12 @@
             border-top: 1px solid #ddd;
             text-align: right;
         }
-        
+
         /* Search Results Styling */
         .search-category {
             margin-bottom: 20px;
         }
-        
+
         .search-category h3 {
             margin-top: 0;
             margin-bottom: 10px;
@@ -730,7 +824,7 @@
             border-bottom: 1px solid #eee;
             color: #333;
         }
-        
+
         .search-result-item {
             display: flex;
             padding: 10px;
@@ -739,27 +833,27 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        
+
         .search-result-item:hover {
             background-color: #f5f5f5;
         }
-        
+
         .search-result-icon {
             font-size: 1.5rem;
             margin-right: 15px;
             display: flex;
             align-items: center;
         }
-        
+
         .search-result-info {
             flex: 1;
         }
-        
+
         .search-result-title {
             font-weight: bold;
             margin-bottom: 3px;
         }
-        
+
         .search-result-subtitle {
             font-size: 0.9rem;
             color: #666;
@@ -904,7 +998,7 @@
             .main-container {
                 padding: 0 1rem;
             }
-            
+
             .page {
                 display: grid;
                 grid-template-columns: 1fr;
@@ -963,7 +1057,8 @@
                 <a href="#" onclick="showPage('reception')" aria-label="Reception">Reception</a>
             </nav>
             <div class="user-info">
-                <input type="search" id="global-search" class="search-bar" placeholder="Search employees, docs..." aria-label="Search">
+                <input type="search" id="global-search" class="search-bar" placeholder="Search employees, docs..."
+                    aria-label="Search">
                 <span id="current-time">Loading...</span>
             </div>
         </div>
@@ -996,10 +1091,12 @@
                 <div class="widget">
                     <h2>🔗 Quick Links</h2>
                     <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <button class="btn" onclick="showEasterEgg('handbook')">Employee Handbook</button>
-                        <button class="btn" onclick="showEasterEgg('it')">IT Support</button>
-                        <button class="btn" onclick="showEasterEgg('suggestion')">Suggestion Box</button>
-                        <button class="btn btn-secondary" onclick="showEasterEgg('parking')">Parking
+                        <button class="btn document-indicator" onclick="showEasterEgg('handbook')">Employee
+                            Handbook</button>
+                        <button class="btn document-indicator" onclick="showEasterEgg('it')">IT Support</button>
+                        <button class="btn document-indicator" onclick="showEasterEgg('suggestion')">Suggestion
+                            Box</button>
+                        <button class="btn btn-secondary document-indicator" onclick="showEasterEgg('parking')">Parking
                             Assignments</button>
                     </div>
                 </div>
@@ -1096,7 +1193,7 @@
                         <p style="font-style: italic; font-size: 0.9rem; margin-top: 0.5rem;">
                             "I'm not superstitious, but I am a little stitious."
                         </p>
-                        <div class="world-best-boss easter-egg" onclick="showEasterEgg('boss')">
+                        <div class="world-best-boss easter-egg memorabilia-indicator" onclick="showEasterEgg('boss')">
                             🏆 World's Best Boss
                         </div>
                     </div>
@@ -1361,7 +1458,8 @@
     <footer class="footer">
         <p>&copy; 2025 Thunder Tifflin Paper Company, Inc. | "Unlimited paper in a digital world"</p>
         <p style="font-size: 0.8rem; margin-top: 0.5rem;">
-            Scranton Branch | Founded 1949 | <span class="easter-egg" onclick="showEasterEgg('teapot')">🫖</span>
+            Scranton Branch | Founded 1949 | <span class="easter-egg memorabilia-indicator"
+                onclick="showEasterEgg('teapot')">🫖</span>
         </p>
     </footer>
 
@@ -1513,19 +1611,186 @@
         ];
 
         // Easter egg responses
+        // Enhanced easter egg system with categories and tracking
+        const easterEggSystem = {
+            categories: {
+                documents: ['handbook', 'it', 'suggestion', 'parking'],
+                memorabilia: ['boss', 'teapot'],
+                interactive: ['tony']
+            },
+
+            // Load discovered eggs from localStorage
+            discovered: JSON.parse(localStorage.getItem('discoveredEggs') || '[]'),
+
+            isDiscovered: function (eggId) {
+                return this.discovered.includes(eggId);
+            },
+
+            discover: function (eggId) {
+                if (!this.isDiscovered(eggId)) {
+                    this.discovered.push(eggId);
+                    localStorage.setItem('discoveredEggs', JSON.stringify(this.discovered));
+                    this.checkAchievements();
+                }
+            },
+
+            checkAchievements: function () {
+                // Document collector
+                if (this.categories.documents.every(egg => this.isDiscovered(egg)) &&
+                    !this.isDiscovered('achievement_paper_master')) {
+                    this.discovered.push('achievement_paper_master');
+                    showAchievementModal('🏆 Paper Master!', 'You found all the Thunder Tifflin documents.');
+                }
+
+                // Memorabilia collector
+                if (this.categories.memorabilia.every(egg => this.isDiscovered(egg)) &&
+                    !this.isDiscovered('achievement_office_fan')) {
+                    this.discovered.push('achievement_office_fan');
+                    showAchievementModal('🏆 Office Superfan!', 'You found all the character memorabilia.');
+                }
+            }
+        };
+
+        // Enhanced easter eggs with more structured data
         const easterEggs = {
-            'handbook': 'Employee Handbook Rule #1: "Sometimes I\'ll start a sentence and I don\'t even know where it\'s going."',
-            'it': 'IT Support: Password hint is "password". Have you tried turning it off and on again?',
-            'suggestion': 'Suggestion Box: "We should have a casino night!" - Mitchell S.',
-            'parking': 'Parking Lot: Dwight Jr. has claimed spots 1-5 for "security reasons"',
-            'boss': '🏆 Certificate of Achievement: World\'s Best Boss - Self-Nominated',
-            'teapot': '🫖 You found the teapot! It contains... cassette tapes and a hot sauce packet.'
+            'handbook': {
+                title: 'Employee Handbook',
+                content: 'Rule #1: "Sometimes I\'ll start a sentence and I don\'t even know where it\'s going."',
+                character: 'Mitchell',
+                category: 'document'
+            },
+            'it': {
+                title: 'IT Support',
+                content: 'Password hint is "password". Have you tried turning it off and on again?',
+                character: 'Nick',
+                category: 'document'
+            },
+            'suggestion': {
+                title: 'Suggestion Box',
+                content: '"We should have a casino night!"',
+                character: 'Mitchell',
+                category: 'document'
+            },
+            'parking': {
+                title: 'Parking Assignments',
+                content: 'Dwight Jr. has claimed spots 1-5 for "security reasons"',
+                character: 'Dwight Jr.',
+                category: 'document'
+            },
+            'boss': {
+                title: 'World\'s Best Boss',
+                content: 'Certificate of Achievement: Self-Nominated',
+                character: 'Mitchell',
+                category: 'memorabilia'
+            },
+            'teapot': {
+                title: 'Secret Teapot',
+                content: 'You found the teapot! It contains... cassette tapes and a hot sauce packet.',
+                character: 'Tim',
+                category: 'memorabilia'
+            },
+            'tony': {
+                title: 'Tony Says',
+                content: '',  // Dynamic content from chatbot
+                character: 'Tony',
+                category: 'interactive'
+            }
         };
 
         function showEasterEgg(type) {
             if (easterEggs[type]) {
-                showModal(easterEggs[type], 'Thunder Tifflin Document');
+                const egg = easterEggs[type];
+
+                // Mark as discovered
+                easterEggSystem.discover(type);
+
+                // Show appropriate modal based on category
+                if (egg.category === 'document') {
+                    showDocumentModal(egg.title, egg.content, egg.character);
+                } else if (egg.category === 'memorabilia') {
+                    showMemorabiliModal(egg.title, egg.content, egg.character);
+                } else {
+                    showModal(egg.content, egg.title);
+                }
             }
+        }
+
+        function showDocumentModal(title, content, character) {
+            const modal = document.getElementById('custom-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalTitle = document.querySelector('.modal-title');
+
+            const currentDate = new Date().toLocaleDateString();
+
+            modalMessage.innerHTML = `
+                <div class="document-modal">
+                    <div class="document-header">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTQgMkgxMGE0IDQgMCAwIDAtNCA0djEyYTQgNCAwIDAgMCA0IDRoMTBhNCA0IDAgMCAwIDQtNFY4bC02LTZ6Ij48L3BhdGg+PHBhdGggZD0iTTE0IDJ2Nmg2Ij48L3BhdGg+PC9zdmc+" alt="Document icon" class="document-icon">
+                        <h3>Thunder Tifflin Paper Co.</h3>
+                    </div>
+                    <div class="document-content">
+                        <h4>${title}</h4>
+                        <p>${content}</p>
+                        <div class="document-footer">
+                            <span>From the desk of: ${character}</span>
+                            <span class="document-date">${currentDate}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modalTitle.textContent = title;
+            modal.style.display = 'block';
+
+            // Focus the OK button
+            document.getElementById('modal-ok-btn').focus();
+        }
+
+        function showMemorabiliModal(title, content, character) {
+            const modal = document.getElementById('custom-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalTitle = document.querySelector('.modal-title');
+
+            modalMessage.innerHTML = `
+                <div class="memorabilia-modal">
+                    <div class="memorabilia-content">
+                        <h4>${title}</h4>
+                        <p>${content}</p>
+                        <div class="memorabilia-attribution">
+                            <span>- ${character}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modalTitle.textContent = title;
+            modal.style.display = 'block';
+
+            // Focus the OK button
+            document.getElementById('modal-ok-btn').focus();
+        }
+
+        function showAchievementModal(title, content) {
+            const modal = document.getElementById('custom-modal');
+            const modalMessage = document.getElementById('modal-message');
+            const modalTitle = document.querySelector('.modal-title');
+
+            modalMessage.innerHTML = `
+                <div class="achievement-modal">
+                    <div class="achievement-icon">🏆</div>
+                    <div class="achievement-content">
+                        <h4>Achievement Unlocked!</h4>
+                        <h3>${title}</h3>
+                        <p>${content}</p>
+                    </div>
+                </div>
+            `;
+
+            modalTitle.textContent = 'Achievement Unlocked';
+            modal.style.display = 'block';
+
+            // Focus the OK button
+            document.getElementById('modal-ok-btn').focus();
         }
 
         function askTony() {
@@ -1547,12 +1812,12 @@
         }
 
         // Modal functions
-        function showModal(message, title = 'localhost:8080 says') {
+        function showModal(message, title = 'Alerting System') {
             const modal = document.getElementById('custom-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalTitle = document.querySelector('.modal-title');
 
-            modalMessage.textContent = message;
+            modalMessage.innerHTML = message;
             modalTitle.textContent = title;
             modal.style.display = 'block';
 
@@ -1567,7 +1832,7 @@
         // Global Search Function
         function performGlobalSearch(query) {
             if (!query || query.trim() === '') return [];
-            
+
             query = query.toLowerCase().trim();
             const results = {
                 employees: [],
@@ -1575,7 +1840,7 @@
                 departments: [],
                 other: []
             };
-            
+
             // Search employees
             employees.forEach(emp => {
                 if (emp.name.toLowerCase().includes(query) ||
@@ -1590,7 +1855,7 @@
                     });
                 }
             });
-            
+
             // Search documents
             const documents = {
                 'handbook': 'Employee Handbook',
@@ -1598,7 +1863,7 @@
                 'policies': 'Company Policies',
                 'forms': 'HR Forms'
             };
-            
+
             Object.entries(documents).forEach(([key, title]) => {
                 if (title.toLowerCase().includes(query)) {
                     results.documents.push({
@@ -1609,7 +1874,7 @@
                     });
                 }
             });
-            
+
             // Search departments
             const departments = [
                 { id: 'hr', name: 'HR Department', icon: '👥' },
@@ -1618,7 +1883,7 @@
                 { id: 'accounting', name: 'Accounting', icon: '💰' },
                 { id: 'reception', name: 'Reception', icon: '🏢' }
             ];
-            
+
             departments.forEach(dept => {
                 if (dept.name.toLowerCase().includes(query)) {
                     results.departments.push({
@@ -1629,7 +1894,7 @@
                     });
                 }
             });
-            
+
             // Search easter eggs
             Object.entries(easterEggs).forEach(([key, content]) => {
                 if (content.toLowerCase().includes(query) || key.toLowerCase().includes(query)) {
@@ -1641,32 +1906,32 @@
                     });
                 }
             });
-            
+
             return results;
         }
-        
+
         // Display search results
         function displaySearchResults(results) {
             const resultsContainer = document.getElementById('search-results');
             const searchModal = document.getElementById('search-modal');
-            
+
             // Clear previous results
             resultsContainer.innerHTML = '';
-            
+
             // Count total results
             const totalResults = Object.values(results).reduce(
                 (total, category) => total + category.length, 0
             );
-            
+
             if (totalResults === 0) {
                 resultsContainer.innerHTML = '<p>No results found.</p>';
                 searchModal.style.display = 'block';
                 return;
             }
-            
+
             // Build results HTML
             let resultsHTML = '';
-            
+
             // Employees section
             if (results.employees.length > 0) {
                 resultsHTML += '<div class="search-category"><h3>Employees</h3>';
@@ -1683,7 +1948,7 @@
                 });
                 resultsHTML += '</div>';
             }
-            
+
             // Documents section
             if (results.documents.length > 0) {
                 resultsHTML += '<div class="search-category"><h3>Documents</h3>';
@@ -1700,7 +1965,7 @@
                 });
                 resultsHTML += '</div>';
             }
-            
+
             // Departments section
             if (results.departments.length > 0) {
                 resultsHTML += '<div class="search-category"><h3>Departments</h3>';
@@ -1717,7 +1982,7 @@
                 });
                 resultsHTML += '</div>';
             }
-            
+
             // Other results section
             if (results.other.length > 0) {
                 resultsHTML += '<div class="search-category"><h3>Other</h3>';
@@ -1734,26 +1999,26 @@
                 });
                 resultsHTML += '</div>';
             }
-            
+
             resultsContainer.innerHTML = resultsHTML;
             searchModal.style.display = 'block';
         }
-        
+
         function closeSearchModal() {
             document.getElementById('search-modal').style.display = 'none';
         }
-        
+
         // Set up modal event listeners
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelector('.close-modal').addEventListener('click', closeModal);
             document.getElementById('modal-ok-btn').addEventListener('click', closeModal);
-            
+
             document.querySelector('.close-search-modal').addEventListener('click', closeSearchModal);
             document.getElementById('search-close-btn').addEventListener('click', closeSearchModal);
-            
+
             // Set up global search
             const globalSearch = document.getElementById('global-search');
-            globalSearch.addEventListener('keypress', function(event) {
+            globalSearch.addEventListener('keypress', function (event) {
                 if (event.key === 'Enter') {
                     const query = globalSearch.value;
                     const results = performGlobalSearch(query);
@@ -1765,11 +2030,11 @@
             window.addEventListener('click', function (event) {
                 const customModal = document.getElementById('custom-modal');
                 const searchModal = document.getElementById('search-modal');
-                
+
                 if (event.target === customModal) {
                     closeModal();
                 }
-                
+
                 if (event.target === searchModal) {
                     closeSearchModal();
                 }
