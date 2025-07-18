@@ -20,7 +20,7 @@ The design balances professional corporate needs with subtle humor - think early
 **Live Demo:** [Thunder Tifflin Intranet](https://angelacyu.github.io/thunder-tifflin-intranet/)  
 **Source Code:** [GitHub Repository](https://github.com/angelacyu/thunder-tifflin-intranet)
 
-{% embed https://angelacyu.github.io/thunder-tifflin-intranet/ %}
+<iframe src="https://angelacyu.github.io/thunder-tifflin-intranet/" width="100%" height="500" frameborder="0"></iframe>
 
 ## Journey
 
