@@ -12,8 +12,8 @@ Design a dream intranet homepage for a fictional company using CSS, HTML, and Ja
 
 I created an intranet for **Thunder Tifflin Paper Company** - a fictional paper manufacturer that feels familiar yet fresh. The design captures that early 2000s corporate aesthetic we all know, but with modern polish and genuine functionality.
 
-**Live Demo:** [Thunder Tifflin Intranet](YOUR_DEMO_URL_HERE)  
-**Source Code:** [GitHub Repository](YOUR_REPO_URL_HERE)
+**Live Demo:** [Thunder Tifflin Intranet](https://angelacyu.github.io/thunder-tifflin-intranet/)  
+**Source Code:** [GitHub Repository](https://github.com/angelacyu/thunder-tifflin-intranet)
 
 ## 🎯 Key Features
 
