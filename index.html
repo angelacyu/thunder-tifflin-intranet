@@ -1648,6 +1648,14 @@
                     this.discovered.push('achievement_office_fan');
                     showAchievementModal('🏆 Office Superfan!', 'You found all the character memorabilia.');
                 }
+                
+                // Dundies Award for discovering 4 easter eggs
+                const actualEggs = this.discovered.filter(egg => !egg.startsWith('achievement_'));
+                if (actualEggs.length >= 4 && !this.isDiscovered('achievement_dundies')) {
+                    this.discovered.push('achievement_dundies');
+                    localStorage.setItem('discoveredEggs', JSON.stringify(this.discovered));
+                    updateEmployeeSpotlight();
+                }
             }
         };
 
@@ -2007,9 +2015,65 @@
         function closeSearchModal() {
             document.getElementById('search-modal').style.display = 'none';
         }
+        
+        // Function to update employee spotlight with Dundies Award
+        function updateEmployeeSpotlight() {
+            // Get the employee spotlight elements
+            const employeePhoto = document.querySelector('.employee-card .employee-photo');
+            const employeeName = document.querySelector('.employee-card p strong');
+            const employeeTitle = document.querySelector('.employee-card p strong').nextSibling.nextSibling;
+            const employeeQuote = document.querySelector('.employee-card p[style*="italic"]');
+            const worldBestBoss = document.querySelector('.world-best-boss');
+            
+            // Update with Dundies Award content
+            employeePhoto.innerHTML = '👤'; // Generic user icon
+            employeeName.textContent = 'You';
+            employeeTitle.textContent = 'Valued Employee';
+            employeeQuote.innerHTML = '\'For exceptional easter egg hunting skills and attention to detail.\'';
+            
+            // Update the World's Best Boss to Dundie Award Winner
+            if (worldBestBoss) {
+                worldBestBoss.innerHTML = '🏆 Dundie Award Winner';
+                worldBestBoss.classList.add('dundies-winner');
+                worldBestBoss.classList.remove('easter-egg'); // Remove easter egg trigger
+                worldBestBoss.onclick = null; // Remove the click handler
+            }
+            
+            // Add special styling
+            const style = document.createElement('style');
+            style.textContent = `
+                .dundies-winner {
+                    background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%);
+                    color: #7d4e24;
+                    padding: 8px 15px;
+                    border-radius: 20px;
+                    margin-top: 15px;
+                    display: inline-block;
+                    font-weight: bold;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                    border: 2px solid #e6b980;
+                    animation: glow 2s infinite alternate;
+                }
+                
+                @keyframes glow {
+                    from { box-shadow: 0 0 10px #ffd700; }
+                    to { box-shadow: 0 0 20px #ffd700, 0 0 30px #ffcc00; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Show a brief notification
+            showModal('Congratulations! You\'ve earned the Dundie Award for finding 4 easter eggs!', 'Achievement Unlocked');
+        }
 
         // Set up modal event listeners
         document.addEventListener('DOMContentLoaded', function () {
+            // Check if user already has Dundies Award
+            const discoveredEggs = JSON.parse(localStorage.getItem('discoveredEggs') || '[]');
+            if (discoveredEggs.includes('achievement_dundies')) {
+                updateEmployeeSpotlight();
+            }
+            
             document.querySelector('.close-modal').addEventListener('click', closeModal);
             document.getElementById('modal-ok-btn').addEventListener('click', closeModal);
 
@@ -2109,6 +2173,22 @@
             }
         `;
         document.head.appendChild(style);
+        
+        // Reset easter eggs for testing
+        function resetEasterEggs() {
+            localStorage.removeItem('discoveredEggs');
+            location.reload();
+        }
+        
+        // Add debug controls (only visible during development)
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            const debugControls = document.createElement('div');
+            debugControls.style.cssText = 'position: fixed; bottom: 10px; right: 10px; padding: 10px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 5px; z-index: 1000;';
+            debugControls.innerHTML = `
+                <button onclick="resetEasterEggs()" style="padding: 5px 10px; background: #ff6b6b; color: white; border: none; border-radius: 3px; cursor: pointer;">Reset Easter Eggs</button>
+            `;
+            document.body.appendChild(debugControls);
+        }
     </script>
 
     <!-- Custom Modal -->
