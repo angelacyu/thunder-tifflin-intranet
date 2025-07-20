@@ -240,10 +240,11 @@
 
         /* Visual Indicators for Easter Eggs */
         .document-indicator::after {
-            content: '📎';
-            font-size: 0.8em;
+            content: '📄';
+            font-size: 1em;
             margin-left: 5px;
-            opacity: 0.7;
+            opacity: 0.9;
+            display: inline-block;
         }
 
         .memorabilia-indicator {
@@ -773,17 +774,31 @@
             font-family: 'Courier New', monospace;
         }
 
+        .document-modal {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         .document-header {
-            background-color: #003366;
-            color: white;
-            padding: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
+        }
+        
+        .document-icon {
+            font-size: 2.5rem;
+            color: #0047AB;
+            background-color: #f0f8ff;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            border: 1px solid #d0e0f0;
         }
 
         .modal-title {
@@ -1733,7 +1748,7 @@
             modalMessage.innerHTML = `
                 <div class="document-modal">
                     <div class="document-header">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTQgMkgxMGE0IDQgMCAwIDAtNCA0djEyYTQgNCAwIDAgMCA0IDRoMTBhNCA0IDAgMCAwIDQtNFY4bC02LTZ6Ij48L3BhdGg+PHBhdGggZD0iTTE0IDJ2Nmg2Ij48L3BhdGg+PC9zdmc+" alt="Document icon" class="document-icon">
+                        <div class="document-icon">📄</div>
                         <h3>Thunder Tifflin Paper Co.</h3>
                     </div>
                     <div class="document-content">
@@ -2012,64 +2027,104 @@
             searchModal.style.display = 'block';
         }
 
-        function closeSearchModal() {
-            document.getElementById('search-modal').style.display = 'none';
-        }
+                // Set up global search
+                const globalSearch = document.getElementById('global-search');
+                globalSearch.addEventListener('keypress', function (event) {
+                    if (event.key === 'Enter') {
+                        const query = globalSearch.value;
+                        const results = performGlobalSearch(query);
+                        displaySearchResults(results);
+                    }
+                });
 
-        // Function to update employee spotlight with Dundies Award
-        function updateEmployeeSpotlight() {
-            // Get the employee spotlight elements
-            const employeePhoto = document.querySelector('.employee-card .employee-photo');
-            const employeeName = document.querySelector('.employee-card p strong');
-            const employeeTitle = document.querySelector('.employee-card p strong').nextSibling.nextSibling;
-            const employeeQuote = document.querySelector('.employee-card p[style*="italic"]');
-            const worldBestBoss = document.querySelector('.world-best-boss');
+                // Close modals when clicking outside of them
+                window.addEventListener('click', function (event) {
+                    const customModal = document.getElementById('custom-modal');
+                    const searchModal = document.getElementById('search-modal');
 
-            // Update with Dundies Award content
-            employeePhoto.innerHTML = '👤'; // Generic user icon
-            employeeName.textContent = 'You 😊';
-            employeeTitle.textContent = 'Valued Employee';
-            employeeQuote.innerHTML = '\'For exceptional easter egg hunting skills and attention to detail.\'';
+                    if (event.target === customModal) {
+                        closeModal();
+                    }
 
-            // Update the World's Best Boss to Dundie Award Winner
-            if (worldBestBoss) {
-                worldBestBoss.innerHTML = '🏆 Dundie Award Winner';
-                worldBestBoss.classList.add('dundies-winner');
-                worldBestBoss.classList.remove('easter-egg'); // Remove easter egg trigger
-                worldBestBoss.onclick = null; // Remove the click handler
+                    if (event.target === searchModal) {
+                        closeSearchModal();
+                    }
+                });
+
+                // Close modals with Escape key
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        closeModal();
+                        closeSearchModal();
+                    }
+                });
+            });
+
+            // Safety counter with occasional reset
+            let safetyDays = 42; // Initial safety counter
+
+            function updateSafetyCounter() {
+                // Random chance of "incident" resetting counter
+                if (Math.random() < 0.1) {
+                    safetyDays = 0;
+                    setTimeout(() => {
+                        showModal("🚨 Warehouse Incident Report: Kevin drove the forklift into the wall again.");
+                    }, 1000);
+                } else {
+                    safetyDays++;
+                }
+                document.getElementById('safety-days').textContent = safetyDays;
             }
 
-            // Add special styling
+            // Update safety counter every 30 seconds (for demo purposes)
+            setInterval(updateSafetyCounter, 30000);
+
+            // Add some hover effects and interactions
+            document.addEventListener('DOMContentLoaded', function () {
+                // Add click effects to widgets
+                const widgets = document.querySelectorAll('.widget');
+                widgets.forEach(widget => {
+                    widget.style.transition = 'all 0.3s ease';
+
+                    widget.addEventListener('mouseenter', function () {
+                        this.style.transform = 'translateY(-6px)';
+                        this.style.boxShadow = '0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)';
+                    });
+
+                    widget.addEventListener('mouseleave', function () {
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05)';
+                    });
+                });
+
+                // Add sparkle effect to easter eggs
+                const easterEggs = document.querySelectorAll('.easter-egg');
+                easterEggs.forEach(egg => {
+                    egg.addEventListener('mouseenter', function () {
+                        this.style.animation = 'sparkle 0.6s ease-in-out';
+                    });
+
+                    egg.addEventListener('animationend', function () {
+                        this.style.animation = '';
+                    });
+                });
+            });
+
+            // Add sparkle animation
             const style = document.createElement('style');
             style.textContent = `
-                .dundies-winner {
-                    background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%);
-                    color: #7d4e24;
-                    padding: 8px 15px;
-                    border-radius: 20px;
-                    margin-top: 15px;
-                    display: inline-block;
-                    font-weight: bold;
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                    border: 2px solid #e6b980;
-                    animation: glow 2s infinite alternate;
-                }
-                
-                @keyframes glow {
-                    from { box-shadow: 0 0 10px #ffd700; }
-                    to { box-shadow: 0 0 20px #ffd700, 0 0 30px #ffcc00; }
+                @keyframes sparkle {
+                    0%, 100% { transform: scale(1) rotate(0deg); }
+                    25% { transform: scale(1.1) rotate(-5deg); }
+                    75% { transform: scale(1.1) rotate(5deg); }
                 }
             `;
             document.head.appendChild(style);
 
-            // Show a brief notification
-            showModal('Congratulations! You\'ve earned the Dundie Award for finding 4 easter eggs!', 'Achievement Unlocked');
-        }
-
-        // Set up modal event listeners
-        document.addEventListener('DOMContentLoaded', function () {
-            // Check if user already has Dundies Award
-            const discoveredEggs = JSON.parse(localStorage.getItem('discoveredEggs') || '[]');
+            // Reset easter eggs for testing
+            function resetEasterEggs() {
+                localStorage.removeItem('discoveredEggs');
+                location.reload();
             if (discoveredEggs.includes('achievement_dundies')) {
                 updateEmployeeSpotlight();
             }
