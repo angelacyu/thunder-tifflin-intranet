@@ -1669,6 +1669,9 @@
                 if (actualEggs.length >= 4 && !this.isDiscovered('achievement_dundies')) {
                     this.discovered.push('achievement_dundies');
                     localStorage.setItem('discoveredEggs', JSON.stringify(this.discovered));
+                    // Show the Dundie award modal and mark it as shown
+                    showAchievementModal('🏆 Dundie Award Winner!', 'You found 4 or more easter eggs! You deserve a Dundie!');
+                    localStorage.setItem('dundieModalShown', 'true');
                     updateEmployeeSpotlight();
                 }
             }
@@ -1794,6 +1797,12 @@
         }
 
         function showAchievementModal(title, content) {
+            // Check if this is the Dundie modal and if it's already been shown
+            if (title.includes('Dundie') && localStorage.getItem('dundieModalShown') === 'true') {
+                // Don't show the modal again if it's already been shown
+                return;
+            }
+            
             const modal = document.getElementById('custom-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalTitle = document.querySelector('.modal-title');
@@ -2124,8 +2133,14 @@
             // Reset easter eggs for testing
             function resetEasterEggs() {
                 localStorage.removeItem('discoveredEggs');
+                localStorage.removeItem('dundieModalShown');
                 location.reload();
+            }
+        
+            // Check for Dundie achievement on page load
+            const discoveredEggs = JSON.parse(localStorage.getItem('discoveredEggs') || '[]');
             if (discoveredEggs.includes('achievement_dundies')) {
+                // Only update the employee spotlight, don't show the modal again
                 updateEmployeeSpotlight();
             }
 
