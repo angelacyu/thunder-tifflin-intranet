@@ -1507,7 +1507,7 @@
         ];
 
         // Page Navigation
-        function showPage(pageId) {
+        window.showPage = function(pageId) {
             // Hide all pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.style.display = 'none');
@@ -1723,7 +1723,7 @@
             }
         };
 
-        function showEasterEgg(type) {
+        window.showEasterEgg = function(type) {
             if (easterEggs[type]) {
                 const egg = easterEggs[type];
 
@@ -2036,43 +2036,42 @@
             searchModal.style.display = 'block';
         }
 
-                // Set up global search
-                const globalSearch = document.getElementById('global-search');
-                globalSearch.addEventListener('keypress', function (event) {
-                    if (event.key === 'Enter') {
-                        const query = globalSearch.value;
-                        const results = performGlobalSearch(query);
-                        displaySearchResults(results);
-                    }
-                });
+        // Set up global search
+        const globalSearch = document.getElementById('global-search');
+        globalSearch.addEventListener('keypress', function (event) {
+            if (event.key === 'Enter') {
+                const query = globalSearch.value;
+                const results = performGlobalSearch(query);
+                displaySearchResults(results);
+            }
+        });
 
-                // Close modals when clicking outside of them
-                window.addEventListener('click', function (event) {
-                    const customModal = document.getElementById('custom-modal');
-                    const searchModal = document.getElementById('search-modal');
+        // Close modals when clicking outside of them
+        window.addEventListener('click', function (event) {
+            const customModal = document.getElementById('custom-modal');
+            const searchModal = document.getElementById('search-modal');
 
-                    if (event.target === customModal) {
-                        closeModal();
-                    }
+            if (event.target === customModal) {
+                closeModal();
+            }
 
-                    if (event.target === searchModal) {
-                        closeSearchModal();
-                    }
-                });
+            if (event.target === searchModal) {
+                closeSearchModal();
+            }
+        });
 
-                // Close modals with Escape key
-                document.addEventListener('keydown', function (event) {
-                    if (event.key === 'Escape') {
-                        closeModal();
-                        closeSearchModal();
-                    }
-                });
-            });
+        // Close modals with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeModal();
+                closeSearchModal();
+            }
+        });
 
-            // Safety counter with occasional reset
-            let safetyDays = 42; // Initial safety counter
+        // Safety counter with occasional reset
+        let safetyDays = 42; // Initial safety counter
 
-            function updateSafetyCounter() {
+        function updateSafetyCounter() {
                 // Random chance of "incident" resetting counter
                 if (Math.random() < 0.1) {
                     safetyDays = 0;
@@ -2150,8 +2149,8 @@
             document.querySelector('.close-search-modal').addEventListener('click', closeSearchModal);
             document.getElementById('search-close-btn').addEventListener('click', closeSearchModal);
 
-            // Set up global search
-            const globalSearch = document.getElementById('global-search');
+            // Global search is already set up above, so we don't need to redeclare it here
+            // Just keeping the event listener
             globalSearch.addEventListener('keypress', function (event) {
                 if (event.key === 'Enter') {
                     const query = globalSearch.value;
@@ -2181,68 +2180,22 @@
                     closeSearchModal();
                 }
             });
-        });
 
-        // Safety counter with occasional reset
-        let safetyDays = 42; // Initial safety counter
-
-        function updateSafetyCounter() {
-            // Random chance of "incident" resetting counter
-            if (Math.random() < 0.1) {
-                safetyDays = 0;
-                setTimeout(() => {
-                    showModal("🚨 Warehouse Incident Report: Kevin drove the forklift into the wall again.");
-                }, 1000);
-            } else {
-                safetyDays++;
-            }
-            document.getElementById('safety-days').textContent = safetyDays;
-        }
+        // Safety counter is already defined above
 
         // Update safety counter every 30 seconds (for demo purposes)
         setInterval(updateSafetyCounter, 30000);
 
-        // Add some hover effects and interactions
-        document.addEventListener('DOMContentLoaded', function () {
-            // Add click effects to widgets
-            const widgets = document.querySelectorAll('.widget');
-            widgets.forEach(widget => {
-                widget.style.transition = 'all 0.3s ease';
-
-                widget.addEventListener('mouseenter', function () {
-                    this.style.transform = 'translateY(-6px)';
-                    this.style.boxShadow = '0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.1)';
-                });
-
-                widget.addEventListener('mouseleave', function () {
-                    this.style.transform = 'translateY(0)';
-                    this.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05)';
-                });
-            });
-
-            // Add sparkle effect to easter eggs
-            const easterEggs = document.querySelectorAll('.easter-egg');
-            easterEggs.forEach(egg => {
-                egg.addEventListener('mouseenter', function () {
-                    this.style.animation = 'sparkle 0.6s ease-in-out';
-                });
-
-                egg.addEventListener('animationend', function () {
-                    this.style.animation = '';
-                });
-            });
-        });
-
         // Add sparkle animation
-        const style = document.createElement('style');
-        style.textContent = `
+        const sparkleStyle = document.createElement('style');
+        sparkleStyle.textContent = `
             @keyframes sparkle {
                 0%, 100% { transform: scale(1) rotate(0deg); }
                 25% { transform: scale(1.1) rotate(-5deg); }
                 75% { transform: scale(1.1) rotate(5deg); }
             }
         `;
-        document.head.appendChild(style);
+        document.head.appendChild(sparkleStyle);
 
         // Reset easter eggs for testing
         function resetEasterEggs() {
