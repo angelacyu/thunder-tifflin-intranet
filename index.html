@@ -1741,7 +1741,7 @@
             }
         }
 
-        function showDocumentModal(title, content, character) {
+        window.showDocumentModal = function(title, content, character) {
             const modal = document.getElementById('custom-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalTitle = document.querySelector('.modal-title');
@@ -1772,7 +1772,7 @@
             document.getElementById('modal-ok-btn').focus();
         }
 
-        function showMemorabiliModal(title, content, character) {
+        window.showMemorabiliModal = function(title, content, character) {
             const modal = document.getElementById('custom-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalTitle = document.querySelector('.modal-title');
@@ -1844,7 +1844,7 @@
         }
 
         // Modal functions
-        function showModal(message, title = 'Alerting System') {
+        window.showModal = function(message, title = 'Alerting System') {
             const modal = document.getElementById('custom-modal');
             const modalMessage = document.getElementById('modal-message');
             const modalTitle = document.querySelector('.modal-title');
@@ -1857,8 +1857,12 @@
             document.getElementById('modal-ok-btn').focus();
         }
 
-        function closeModal() {
+        window.closeModal = function() {
             document.getElementById('custom-modal').style.display = 'none';
+        }
+        
+        window.closeSearchModal = function() {
+            document.getElementById('search-modal').style.display = 'none';
         }
 
         // Global Search Function
@@ -2143,11 +2147,18 @@
                 updateEmployeeSpotlight();
             }
 
-            document.querySelector('.close-modal').addEventListener('click', closeModal);
-            document.getElementById('modal-ok-btn').addEventListener('click', closeModal);
+            // Add event listeners to modal close buttons with null checks
+            const closeModalBtn = document.querySelector('.close-modal');
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            
+            const modalOkBtn = document.getElementById('modal-ok-btn');
+            if (modalOkBtn) modalOkBtn.addEventListener('click', closeModal);
 
-            document.querySelector('.close-search-modal').addEventListener('click', closeSearchModal);
-            document.getElementById('search-close-btn').addEventListener('click', closeSearchModal);
+            const closeSearchModalBtn = document.querySelector('.close-search-modal');
+            if (closeSearchModalBtn) closeSearchModalBtn.addEventListener('click', closeSearchModal);
+            
+            const searchCloseBtn = document.getElementById('search-close-btn');
+            if (searchCloseBtn) searchCloseBtn.addEventListener('click', closeSearchModal);
 
             // Global search is already set up above, so we don't need to redeclare it here
             // Just keeping the event listener
@@ -2219,13 +2230,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Modal Title</h3>
-                <span class="close-modal">&times;</span>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <p id="modal-message">Modal content goes here.</p>
             </div>
             <div class="modal-footer">
-                <button id="modal-ok-btn" class="btn">OK</button>
+                <button id="modal-ok-btn" class="btn" onclick="closeModal()">OK</button>
             </div>
         </div>
     </div>
@@ -2235,13 +2246,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Search Results</h3>
-                <span class="close-search-modal">&times;</span>
+                <span class="close-search-modal" onclick="closeSearchModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <div id="search-results"></div>
             </div>
             <div class="modal-footer">
-                <button id="search-close-btn" class="btn">Close</button>
+                <button id="search-close-btn" class="btn" onclick="closeSearchModal()">Close</button>
             </div>
         </div>
     </div>
