@@ -4,6 +4,8 @@
 **Live Demo:** [Thunder Tifflin Intranet](https://angelacyu.github.io/thunder-tifflin-intranet/)  
 **Source Code:** [GitHub Repository](https://github.com/angelacyu/thunder-tifflin-intranet)
 
+![Thunder Tifflin Intranet Interface](./screenshot.png)
+
 ---
 
 ## 🏢 Project Overview
